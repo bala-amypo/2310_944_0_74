@@ -1,32 +1,42 @@
-package com.example.demo.service;
-import java.util.*;
+package com.example.demo.controller;
 
-import org.springframework.stereotype.Service;
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RestController;
+
 import com.example.demo.entity.Studententity;
+import com.example.demo.service.Studentservice;
 
-@Service
-public class Studentservice {
-    Map<Integer,Studententity> mp= new HashMap<>();
+@RestController
+public class Studentcontroller{
+    @Autowired
+    Studentservice src;
+    @PostMapping("/post")
+    public Studententity postdata(@RequestBody Studententity st){
+        return src.savedata(st);
+   }
+    @GetMapping("/get")
+   public List<Studententity> getdata(){
+    return src.retdata();
+   }
+   @GetMapping("/getid/{id}")
+   public Studententity getIdVal(@PathVariable int id){
+    return src.id(id);
+   }
+   @PutMapping("/updatedata/{id}")
+   public Studententity updateStudent(@PathVariable int id,@RequestBody Studententity st){
+    return src.updateStudent(id,st);
 
-    public Studententity savedata(Studententity st){
-        mp.put(st.getId(), st);
-        return st;
-    }
-
-    public List<Studententity> retdata(){
-        return new ArrayList<>(mp.values());
-    }
-
-    public Studententity id(int id){
-        return mp.get(id);
-    }
-
-    public Studententity updateStudent(int id, Studententity st){
-        mp.replace(id, st);
-        return mp.get(id);
-    }
-    
-    public Studententity deleteStudent(int id){
-        return mp.remove(id);
-    }
+   }
+   @DeleteMapping("/delete/{id}")
+   public Studententity deleteStudent(@PathVariable int id){
+    return src.deleteStudent(id);
+   }
 }
